@@ -8,8 +8,8 @@ My-Flix is a Netflix-inspired personal portfolio web app built to present projec
 - Read-only browsing for HR and Guest
 - Password-protected owner access for editing
 - Project, Profile, and Education sections
-- Large rotating hero showcase for up to six featured items
-- Smooth page transitions and hero carousel animation
+- Large rotating  showcase for up to six featured items
+- Smooth page transitions and carousel animation
 - Project cards with GitHub, live project, and document links
 - Recently Added tags for items added within the last 30 days
 - Local Studio editor for updating titles, descriptions, links, images, and documents
