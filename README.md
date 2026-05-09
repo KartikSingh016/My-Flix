@@ -36,34 +36,6 @@ My-Flix is a Netflix-inspired personal portfolio web app built to present projec
 └── private-config.js    # Local-only owner password config, ignored by Git
 ```
 
-## Security Notes
-
-`private-config.js` is intentionally ignored by Git and should not be uploaded to GitHub. It can hold local password configuration for owner access while keeping sensitive values out of the public repository.
-
-Content added through the in-app editor is saved in the browser's local storage. That is useful for testing, but it does not automatically create GitHub commits or upload files to the deployed site.
-
-For public deployment, add permanent files directly to the project folder:
-
-```text
-assets/my-project-image.png
-documents/resume.pdf
-```
-
-Then reference those paths inside My-Flix Studio and commit the files to GitHub.
-
-## Running Locally
-
-From the project folder:
-
-```bash
-python -m http.server 8000 --bind 127.0.0.1
-```
-
-Then open:
-
-```text
-http://127.0.0.1:8000/
-```
 
 ## Deployment
 
