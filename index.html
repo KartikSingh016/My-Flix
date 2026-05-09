@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My-Flix Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="app" class="app-shell"></div>
+
+    <div id="studyTransition" class="study-transition" aria-hidden="true">
+      <div class="study-card">
+        <div class="lamp">
+          <span class="lamp-head"></span>
+          <span class="lamp-stem"></span>
+          <span class="lamp-light"></span>
+        </div>
+        <div class="student">
+          <span class="student-hair"></span>
+          <span class="student-head"></span>
+          <span class="student-body"></span>
+          <span class="student-arm student-arm-left"></span>
+          <span class="student-arm student-arm-right"></span>
+          <span class="pencil"></span>
+        </div>
+        <div class="desk">
+          <span class="book book-left"></span>
+          <span class="book book-right"></span>
+          <span class="laptop"></span>
+        </div>
+        <p>Loading your showcase...</p>
+      </div>
+    </div>
+
+    <template id="iconTemplate">
+      <svg viewBox="0 0 120 120" role="img" aria-hidden="true">
+        <circle cx="32" cy="46" r="7" fill="currentColor"></circle>
+        <circle cx="88" cy="46" r="7" fill="currentColor"></circle>
+        <path d="M40 75c12 9 28 10 42 0" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round"></path>
+      </svg>
+    </template>
+
+    <script src="private-config.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,5 @@
+private-config.js
+server.log
+server.err
+.chrome-profile*/
+verification-*.png
