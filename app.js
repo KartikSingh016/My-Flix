@@ -3,11 +3,30 @@ const SESSION_ACCESS_KEY = "myflixAccessMode.v1";
 const SESSION_VIEWER_KEY = "myflixViewerName.v1";
 const PASSWORD_HASH_KEY = "myflixOwnerPasswordHash.v1";
 const PASSWORD_SALT_KEY = "myflixOwnerPasswordSalt.v1";
+const AUDIENCE_THEME_KEY = "myflixAudienceTheme.v1";
 const UPLOAD_MAX_EDGE = 1280;
 const UPLOAD_JPEG_QUALITY = 0.82;
 const UPLOAD_SIZE_WARNING = 2200000;
 const TOP_FEATURED_LIMIT = 6;
 const HERO_ROTATION_MS = 6500;
+
+const audienceThemes = [
+  {
+    id: "lavender",
+    label: "Lavender",
+    image: "assets/audience-lavender.jpg"
+  },
+  {
+    id: "morning",
+    label: "Morning",
+    image: "assets/audience-morning.jpg"
+  },
+  {
+    id: "night",
+    label: "Night",
+    image: "assets/audience-night.jpg"
+  }
+];
 
 const defaultData = {
   appName: "My-Flix",
@@ -251,7 +270,6 @@ const defaultData = {
 };
 
 const app = document.getElementById("app");
-const transitionEl = document.getElementById("studyTransition");
 const iconTemplate = document.getElementById("iconTemplate");
 let heroRotationTimer = null;
 
@@ -279,7 +297,8 @@ let state = {
   editingItemCollection: null,
   editingProfileId: null,
   itemFormCollection: initialCollection,
-  studioScrollTop: 0
+  studioScrollTop: 0,
+  audienceTheme: getStoredAudienceTheme()
 };
 
 function loadData() {
@@ -403,6 +422,23 @@ function persistNormalizedData() {
   }
 }
 
+function getStoredAudienceTheme() {
+  const stored = localStorage.getItem(AUDIENCE_THEME_KEY);
+  if (stored === "sunrise") return "morning";
+  return audienceThemes.some((theme) => theme.id === stored) ? stored : "morning";
+}
+
+function getAudienceTheme() {
+  return audienceThemes.find((theme) => theme.id === state.audienceTheme) || audienceThemes[1];
+}
+
+function setAudienceTheme(themeId) {
+  if (!audienceThemes.some((theme) => theme.id === themeId)) return;
+  state.audienceTheme = themeId;
+  localStorage.setItem(AUDIENCE_THEME_KEY, themeId);
+  render();
+}
+
 function render() {
   if (state.view !== "browse") {
     stopHeroRotator();
@@ -441,10 +477,17 @@ function restoreStudioScrollAfterRender() {
 }
 
 function renderAudienceScreen() {
+  const activeTheme = getAudienceTheme();
   app.innerHTML = `
-    <main class="profile-screen">
-      <header class="profile-topbar">
+    <main class="profile-screen audience-screen audience-theme-${escapeAttr(activeTheme.id)}" style="--audience-bg: url('${escapeCssUrl(activeTheme.image)}');">
+      <div class="audience-backdrop" aria-hidden="true">
+        <span class="cloud cloud-one"></span>
+        <span class="cloud cloud-two"></span>
+        <span class="cloud cloud-three"></span>
+      </div>
+      <header class="profile-topbar audience-topbar">
         <div class="brand small">${escapeHtml(data.appName)}</div>
+        ${renderAudienceThemeControls()}
       </header>
       <section class="profile-stage" aria-label="Profile chooser">
         <h1>Who's watching?</h1>
@@ -454,6 +497,29 @@ function renderAudienceScreen() {
       </section>
       ${state.passwordPrompt ? renderPasswordPrompt() : ""}
     </main>
+  `;
+}
+
+function renderAudienceThemeControls() {
+  return `
+    <div class="theme-switcher" role="group" aria-label="Background theme">
+      ${audienceThemes
+        .map(
+          (theme) => `
+            <button
+              class="theme-button theme-button-${escapeAttr(theme.id)} ${state.audienceTheme === theme.id ? "active" : ""}"
+              type="button"
+              data-action="set-audience-theme"
+              data-theme="${escapeAttr(theme.id)}"
+              aria-label="${escapeAttr(theme.label)} background"
+              aria-pressed="${state.audienceTheme === theme.id}"
+            >
+              <span></span>
+            </button>
+          `
+        )
+        .join("")}
+    </div>
   `;
 }
 
@@ -1056,6 +1122,10 @@ function handleClick(event) {
 
   if (action === "app-back") {
     appBack();
+  }
+
+  if (action === "set-audience-theme") {
+    setAudienceTheme(target.dataset.theme);
   }
 
   if (action === "select-audience") {
@@ -1815,11 +1885,7 @@ function resetData() {
 }
 
 function transitionTo(callback) {
-  transitionEl.classList.add("active");
-  window.setTimeout(() => {
-    callback();
-    window.setTimeout(() => transitionEl.classList.remove("active"), 520);
-  }, 460);
+  callback();
 }
 
 function updateNavShadow() {
