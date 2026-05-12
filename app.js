@@ -9,6 +9,22 @@ const UPLOAD_JPEG_QUALITY = 0.82;
 const UPLOAD_SIZE_WARNING = 2200000;
 const TOP_FEATURED_LIMIT = 6;
 const HERO_ROTATION_MS = 6500;
+const defaultSectionOrder = ["projects", "profile", "skills", "education", "experience"];
+
+const audienceAvatarAssets = {
+  "audience-kartik": {
+    current: "assets/avatar-kartik-ai.webp",
+    legacy: ["assets/avatar-kartik.png", "assets/avatar-kartik-boy.jpg"]
+  },
+  "audience-hr": {
+    current: "assets/avatar-hr-man.avif",
+    legacy: ["assets/avatar-hr.png"]
+  },
+  "audience-guest": {
+    current: "assets/avatar-guest-noface.jpg",
+    legacy: ["assets/avatar-guest.png"]
+  }
+};
 
 const audienceThemes = [
   {
@@ -38,7 +54,7 @@ const defaultData = {
       gradientStart: "#0a84ff",
       gradientEnd: "#49c6ff",
       iconText: "K",
-      image: "assets/avatar-kartik.png"
+      image: "assets/avatar-kartik-ai.webp"
     },
     {
       id: "audience-hr",
@@ -47,7 +63,7 @@ const defaultData = {
       gradientStart: "#19c37d",
       gradientEnd: "#7bed9f",
       iconText: "HR",
-      image: "assets/avatar-hr.png"
+      image: "assets/avatar-hr-man.avif"
     },
     {
       id: "audience-guest",
@@ -56,7 +72,7 @@ const defaultData = {
       gradientStart: "#7048e8",
       gradientEnd: "#ff922b",
       iconText: "G",
-      image: "assets/avatar-guest.png"
+      image: "assets/avatar-guest-noface.jpg"
     }
   ],
   profiles: [
@@ -79,12 +95,30 @@ const defaultData = {
       image: ""
     },
     {
+      id: "skills-profile",
+      name: "Skills",
+      collectionKey: "skills",
+      gradientStart: "#d7e85b",
+      gradientEnd: "#6fbf73",
+      iconText: "SK",
+      image: ""
+    },
+    {
       id: "education-profile",
       name: "Education",
       collectionKey: "education",
       gradientStart: "#7048e8",
       gradientEnd: "#ff922b",
       iconText: "ED",
+      image: ""
+    },
+    {
+      id: "experience-profile",
+      name: "Work Experience",
+      collectionKey: "experience",
+      gradientStart: "#28d7c3",
+      gradientEnd: "#286ef0",
+      iconText: "WE",
       image: ""
     }
   ],
@@ -212,6 +246,60 @@ const defaultData = {
         }
       ]
     },
+    skills: {
+      navLabel: "Skills",
+      eyebrow: "Skill Stack",
+      emptyTitle: "No skills yet",
+      featuredId: "skills-frontend",
+      featuredIds: ["skills-frontend", "skills-tools", "skills-working-style"],
+      items: [
+        {
+          id: "skills-frontend",
+          title: "Frontend Stack",
+          category: "React, JavaScript, UI",
+          tagline: "The core tools used to build responsive, polished browser experiences.",
+          description:
+            "A focused stack for building clean portfolio-ready interfaces: React patterns, JavaScript logic, responsive CSS, routing, state, and browser-first interaction design.",
+          skills: "React, JavaScript, HTML, CSS, responsive design, components",
+          image: "assets/profile-skills.png",
+          banner: "assets/hero-profile.png",
+          githubUrl: "",
+          liveUrl: "",
+          documentUrl: "",
+          dateAdded: "2026-05-11"
+        },
+        {
+          id: "skills-tools",
+          title: "Workflow Tools",
+          category: "Git, GitHub, Vercel",
+          tagline: "How projects move from local code to a public deployed site.",
+          description:
+            "Practical deployment and collaboration workflow: version control, GitHub repositories, readable commits, Vercel deployments, and careful project organization.",
+          skills: "Git, GitHub, Vercel, debugging, browser testing, documentation",
+          image: "assets/project-insight.png",
+          banner: "assets/hero-projects.png",
+          githubUrl: "",
+          liveUrl: "",
+          documentUrl: "",
+          dateAdded: "2026-05-11"
+        },
+        {
+          id: "skills-working-style",
+          title: "Working Style",
+          category: "Communication, Ownership",
+          tagline: "The habits that make project work easier to trust.",
+          description:
+            "A place to show reliability, learning speed, clear communication, problem solving, and the ability to turn feedback into visible product improvements.",
+          skills: "Communication, ownership, learning, documentation, product thinking",
+          image: "assets/profile-about.png",
+          banner: "assets/hero-profile.png",
+          githubUrl: "",
+          liveUrl: "",
+          documentUrl: "",
+          dateAdded: "2026-05-11"
+        }
+      ]
+    },
     education: {
       navLabel: "Education",
       eyebrow: "Learning Path",
@@ -265,6 +353,60 @@ const defaultData = {
           dateAdded: "2026-03-16"
         }
       ]
+    },
+    experience: {
+      navLabel: "Work Experience",
+      eyebrow: "Experience Timeline",
+      emptyTitle: "No work experience yet",
+      featuredId: "experience-project-work",
+      featuredIds: ["experience-project-work", "experience-collaboration", "experience-growth"],
+      items: [
+        {
+          id: "experience-project-work",
+          title: "Project Work",
+          category: "Practical Experience",
+          tagline: "Portfolio projects treated like real product work.",
+          description:
+            "Use this card for internships, freelance work, college projects, or self-directed builds that prove you can take an idea from requirements to a working deployed product.",
+          skills: "Planning, implementation, testing, deployment, iteration",
+          image: "assets/project-taskforge.png",
+          banner: "assets/hero-projects.png",
+          githubUrl: "",
+          liveUrl: "",
+          documentUrl: "",
+          dateAdded: "2026-05-11"
+        },
+        {
+          id: "experience-collaboration",
+          title: "Collaboration",
+          category: "Team Practice",
+          tagline: "How you work with feedback, timelines, and shared expectations.",
+          description:
+            "Add examples of teamwork, class projects, hackathons, client conversations, code reviews, or any situation where coordination mattered.",
+          skills: "Teamwork, feedback, planning, presentation, accountability",
+          image: "assets/profile-resume.png",
+          banner: "assets/hero-profile.png",
+          githubUrl: "",
+          liveUrl: "",
+          documentUrl: "",
+          dateAdded: "2026-05-11"
+        },
+        {
+          id: "experience-growth",
+          title: "Growth Log",
+          category: "Learning History",
+          tagline: "A place for the professional story behind the projects.",
+          description:
+            "Use this for milestones, role goals, important challenges solved, and what you learned while improving the portfolio.",
+          skills: "Learning, reflection, debugging, adaptability, consistency",
+          image: "assets/education-achievements.png",
+          banner: "assets/hero-education.png",
+          githubUrl: "",
+          liveUrl: "",
+          documentUrl: "",
+          dateAdded: "2026-05-11"
+        }
+      ]
     }
   }
 };
@@ -278,15 +420,16 @@ persistNormalizedData();
 const requestedSection = new URLSearchParams(window.location.search).get("section");
 const sessionAccess = sessionStorage.getItem(SESSION_ACCESS_KEY);
 const sessionViewer = sessionStorage.getItem(SESSION_VIEWER_KEY);
+const initialViewer = sessionViewer || (sessionAccess === "admin" ? "Kartik" : "Guest");
 const initialCollection =
   requestedSection && data.collections[requestedSection]
     ? requestedSection
-    : data.profiles[0]?.collectionKey || Object.keys(data.collections)[0] || "projects";
+    : getViewerLandingCollection(initialViewer);
 let state = {
-  view: requestedSection && data.collections[requestedSection] ? "browse" : "audiences",
+  view: "browse",
   collectionKey: initialCollection,
   accessMode: sessionAccess === "admin" ? "admin" : "viewer",
-  currentViewer: requestedSection ? sessionViewer || "Viewer" : null,
+  currentViewer: initialViewer,
   passwordPrompt: false,
   passwordError: "",
   activeItemId: null,
@@ -334,6 +477,7 @@ function normalizeData(candidate) {
 
   normalized.profiles = normalized.profiles.map((profile, index) => normalizeProfile(profile, index));
   repairDefaultSections(normalized, base);
+  orderDefaultProfiles(normalized);
   normalized.profiles.forEach((profile) => {
     if (!normalized.collections[profile.collectionKey]) {
       normalized.collections[profile.collectionKey] = createCollectionFromProfile(profile);
@@ -345,7 +489,7 @@ function normalizeData(candidate) {
 }
 
 function repairDefaultSections(normalized, base) {
-  ["projects", "profile", "education"].forEach((collectionKey) => {
+  defaultSectionOrder.forEach((collectionKey) => {
     const defaultCollection = base.collections[collectionKey];
     const defaultProfile = base.profiles.find((profile) => profile.collectionKey === collectionKey);
 
@@ -364,17 +508,42 @@ function repairDefaultSections(normalized, base) {
   });
 }
 
+function orderDefaultProfiles(normalized) {
+  const orderedDefaults = [];
+  const customProfiles = [];
+  const seenDefaults = new Set();
+
+  normalized.profiles.forEach((profile) => {
+    const orderIndex = defaultSectionOrder.indexOf(profile.collectionKey);
+    if (orderIndex === -1 || seenDefaults.has(profile.collectionKey)) {
+      customProfiles.push(profile);
+      return;
+    }
+    orderedDefaults[orderIndex] = profile;
+    seenDefaults.add(profile.collectionKey);
+  });
+
+  normalized.profiles = [...orderedDefaults.filter(Boolean), ...customProfiles];
+}
+
 function normalizeAudience(audience, index) {
   const fallbackId = `audience-${index + 1}`;
   const fallback = defaultData.audiences[index] || {};
+  const id = audience.id || fallback.id || slugify(audience.name || fallbackId);
+  const avatarAsset = audienceAvatarAssets[id];
+  const candidateImage = audience.image || fallback.image || "";
+  const image =
+    avatarAsset && avatarAsset.legacy.includes(candidateImage)
+      ? avatarAsset.current
+      : candidateImage;
   return {
-    id: audience.id || slugify(audience.name || fallbackId),
+    id,
     name: audience.name || `Viewer ${index + 1}`,
     role: audience.role === "owner" ? "owner" : "viewer",
     gradientStart: audience.gradientStart || fallback.gradientStart || "#0a84ff",
     gradientEnd: audience.gradientEnd || fallback.gradientEnd || "#49c6ff",
     iconText: audience.iconText || fallback.iconText || "",
-    image: audience.image || fallback.image || ""
+    image
   };
 }
 
@@ -447,7 +616,9 @@ function render() {
   if (state.view === "audiences") {
     renderAudienceScreen();
   } else if (state.view === "sections") {
-    renderSectionScreen();
+    state.view = "browse";
+    state.collectionKey = getDefaultCollectionKey();
+    renderBrowseScreen();
   } else {
     renderBrowseScreen();
   }
@@ -523,47 +694,11 @@ function renderAudienceThemeControls() {
   `;
 }
 
-function renderSectionScreen() {
-  app.innerHTML = `
-    <main class="profile-screen section-choice-screen">
-      <header class="profile-topbar">
-        <div class="profile-title-row">
-          <button class="icon-button app-back-button" type="button" data-action="app-back" aria-label="Go back">${backIcon()}</button>
-          <div class="brand small">${escapeHtml(data.appName)}</div>
-        </div>
-        <div class="profile-actions">
-          <span class="viewer-pill">${escapeHtml(state.currentViewer || "Viewer")} ${canEdit() ? "Admin" : "Read Only"}</span>
-          ${canEdit() ? `<button class="ghost-button" type="button" data-action="open-studio" data-tab="profiles">Manage Sections</button>` : ""}
-          ${canEdit() ? `<button class="ghost-button" type="button" data-action="open-studio" data-tab="json">Edit Data</button>` : ""}
-          <button class="ghost-button" type="button" data-action="switch-viewer">Switch Viewer</button>
-        </div>
-      </header>
-      <section class="profile-stage" aria-label="Section chooser">
-        <h1>What do you want to watch?</h1>
-        <div class="profile-grid section-choice-grid">
-          ${data.profiles.map(renderSectionCard).join("")}
-        </div>
-        ${canEdit() ? `<button class="ghost-button manage-profiles" type="button" data-action="open-studio" data-tab="items">Customize Content</button>` : ""}
-      </section>
-      ${state.studioOpen ? renderStudio() : ""}
-    </main>
-  `;
-}
-
 function renderAudienceCard(audience) {
   return `
     <button class="profile-card" type="button" data-action="select-audience" data-audience-id="${escapeAttr(audience.id)}">
-      ${renderProfileAvatar(audience, "profile-avatar")}
+      ${renderProfileAvatar(audience, "profile-avatar audience-avatar")}
       <span>${escapeHtml(audience.name)}</span>
-    </button>
-  `;
-}
-
-function renderSectionCard(profile) {
-  return `
-    <button class="profile-card" type="button" data-action="select-section" data-collection="${escapeAttr(profile.collectionKey)}">
-      ${renderProfileAvatar(profile, "profile-avatar")}
-      <span>${escapeHtml(profile.name)}</span>
     </button>
   `;
 }
@@ -626,7 +761,7 @@ function renderBrowseScreen() {
   ];
 
   app.innerHTML = `
-    <main class="browse-shell">
+    <main class="browse-shell browse-theme-${escapeAttr(state.audienceTheme)}">
       ${renderNav()}
       ${renderHero(collection, featuredItems)}
       <section class="content-area" aria-label="${escapeAttr(collection.navLabel)} rows">
@@ -646,15 +781,18 @@ function renderNav() {
   return `
     <header class="top-nav" id="topNav">
       <div class="nav-left">
-        <button class="icon-button app-back-button" type="button" data-action="app-back" aria-label="Go back">${backIcon()}</button>
-        <button class="brand small" type="button" data-action="go-sections" aria-label="Back to section chooser">${escapeHtml(data.appName)}</button>
-        <nav class="section-tabs" aria-label="Sections">
-          ${data.profiles
+        <button class="brand small top-brand" type="button" data-action="open-section" data-collection="projects" aria-label="Open home">${escapeHtml(data.appName)}</button>
+        <nav class="title-tabs" aria-label="Primary navigation">
+          ${getTitleNavItems()
             .map(
-              (profile) => `
-                <button type="button" data-action="open-section" data-collection="${escapeAttr(profile.collectionKey)}" ${
-                  profile.collectionKey === state.collectionKey ? 'aria-current="page"' : ""
-                }>${escapeHtml(profile.name)}</button>
+              (item) => `
+                <button
+                  class="${item.active ? "active" : ""}"
+                  type="button"
+                  data-action="open-section"
+                  data-collection="${escapeAttr(item.collectionKey)}"
+                  ${item.active ? 'aria-current="page"' : ""}
+                >${escapeHtml(item.label)}</button>
               `
             )
             .join("")}
@@ -662,13 +800,21 @@ function renderNav() {
       </div>
       <div class="nav-right">
         ${canEdit() ? `<button class="ghost-button" type="button" data-action="open-studio" data-tab="items">Customize</button>` : ""}
-        <button class="ghost-button" type="button" data-action="switch-viewer">Switch Viewer</button>
         <button class="mini-profile" type="button" data-action="switch-viewer" aria-label="Switch viewer" style="${currentAudience ? escapeAttr(`background: linear-gradient(135deg, ${currentAudience.gradientStart}, ${currentAudience.gradientEnd});`) : ""}">
           ${currentAudience ? renderMiniAvatar(currentAudience) : ""}
         </button>
       </div>
     </header>
   `;
+}
+
+function getTitleNavItems() {
+  return [
+    { label: "Projects", collectionKey: "projects", active: state.collectionKey === "projects" },
+    { label: "Skills", collectionKey: "skills", active: state.collectionKey === "skills" },
+    { label: "Work Experience", collectionKey: "experience", active: state.collectionKey === "experience" },
+    { label: "Education", collectionKey: "education", active: state.collectionKey === "education" }
+  ].filter((item) => data.collections[item.collectionKey]);
 }
 
 function renderMiniAvatar(profile) {
@@ -1138,22 +1284,12 @@ function handleClick(event) {
     } else if (audience) {
       setViewerAccess("viewer", audience.name);
       transitionTo(() => {
-        state.view = "sections";
+        state.view = "browse";
+        state.collectionKey = getViewerLandingCollection(audience.name);
+        state.itemFormCollection = state.collectionKey;
         render();
       });
     }
-  }
-
-  if (action === "select-section") {
-    transitionTo(() => openCollection(target.dataset.collection));
-  }
-
-  if (action === "go-sections") {
-    transitionTo(() => {
-      state.view = state.currentViewer ? "sections" : "audiences";
-      closeOverlays();
-      render();
-    });
   }
 
   if (action === "switch-viewer") {
@@ -1523,7 +1659,7 @@ function appBack() {
   }
 
   if (state.view === "browse") {
-    state.view = state.currentViewer ? "sections" : "audiences";
+    state.view = "audiences";
     closeOverlays();
     render();
     return;
@@ -1566,7 +1702,9 @@ async function ownerLogin(form) {
   setViewerAccess("admin", "Kartik");
   state.passwordPrompt = false;
   state.passwordError = "";
-  state.view = "sections";
+  state.view = "browse";
+  state.collectionKey = getViewerLandingCollection("Kartik");
+  state.itemFormCollection = state.collectionKey;
   toast("Admin mode unlocked.");
   render();
 }
@@ -1972,6 +2110,20 @@ function getCollection(collectionKey) {
     ensureCollection(collectionKey, titleCase(collectionKey));
   }
   return data.collections[collectionKey];
+}
+
+function getDefaultCollectionKey() {
+  return data?.collections?.projects ? "projects" : data?.profiles?.[0]?.collectionKey || Object.keys(data?.collections || {})[0] || "projects";
+}
+
+function getViewerLandingCollection(viewerName) {
+  const landingByViewer = {
+    Kartik: "skills",
+    HR: "projects",
+    Guest: "education"
+  };
+  const preferredCollection = landingByViewer[viewerName] || "projects";
+  return data?.collections?.[preferredCollection] ? preferredCollection : getDefaultCollectionKey();
 }
 
 function ensureCollection(collectionKey, label) {
