@@ -767,6 +767,7 @@ function renderBrowseScreen() {
       ${renderNav()}
       ${renderHero(collection, featuredItems)}
       <section class="content-area" aria-label="${escapeAttr(collection.navLabel)} rows">
+        ${renderPortfolioTree()}
         ${itemRows.map((row) => renderRow(row.title, row.items, row.count)).join("")}
       </section>
       ${state.activeItemId ? renderDetailModal() : ""}
@@ -908,6 +909,95 @@ function primaryActionButton(item) {
     return `<button class="solid-button" type="button" data-action="open-item" data-collection="${escapeAttr(state.collectionKey)}" data-item-id="${escapeAttr(item.id)}">${playIcon()} Open</button>`;
   }
   return `<a class="solid-button" href="${escapeAttr(target)}" ${linkTargetAttrs(target)}>${playIcon()} Open</a>`;
+}
+
+function renderPortfolioTree() {
+  const branches = getPortfolioTreeBranches();
+  if (!branches.length) return "";
+  const treeTitle = `${branches[0].collection.navLabel} Tree`;
+
+  return `
+    <section class="portfolio-tree-section" aria-labelledby="portfolioTreeTitle">
+      <div class="tree-section-head">
+        <p class="eyebrow">Portfolio Map</p>
+        <h2 id="portfolioTreeTitle">${escapeHtml(treeTitle)}</h2>
+      </div>
+      <div class="portfolio-tree-scroll">
+        <div class="portfolio-tree">
+          ${branches.map(renderTreeBranch).join("")}
+        </div>
+      </div>
+    </section>
+  `;
+}
+
+function getPortfolioTreeBranches() {
+  const collectionKey = data.collections[state.collectionKey] ? state.collectionKey : getDefaultCollectionKey();
+  return [
+    {
+      key: collectionKey,
+      collection: getCollection(collectionKey),
+      profile: data.profiles.find((profile) => profile.collectionKey === collectionKey)
+    }
+  ];
+}
+
+function renderTreeBranch(branch) {
+  const items = getSortedItems(branch.collection);
+  return `
+    <article class="tree-branch ${branch.key === state.collectionKey ? "active" : ""}">
+      <button class="tree-root-node" type="button" data-action="open-section" data-collection="${escapeAttr(branch.key)}">
+        <span class="tree-root-mark">${escapeHtml(treeNodeMark(branch.profile, branch.collection.navLabel))}</span>
+        <span>
+          <strong>${escapeHtml(branch.collection.navLabel)}</strong>
+          <small>${escapeHtml(branch.collection.eyebrow || "Showcase")}</small>
+        </span>
+      </button>
+      <div class="tree-child-list">
+        ${
+          items.length
+            ? items.map((item, index) => renderTreeNode(branch.key, item, index)).join("")
+            : `<div class="tree-empty-node">${escapeHtml(branch.collection.emptyTitle)}</div>`
+        }
+      </div>
+    </article>
+  `;
+}
+
+function renderTreeNode(collectionKey, item, index) {
+  const linkCount = [item.githubUrl, item.liveUrl, item.documentUrl].filter(Boolean).length;
+  return `
+    <button
+      class="tree-node"
+      type="button"
+      data-action="open-item"
+      data-collection="${escapeAttr(collectionKey)}"
+      data-item-id="${escapeAttr(item.id)}"
+      style="--node-index: ${index};"
+    >
+      <span class="tree-node-dot"></span>
+      <span class="tree-node-copy">
+        <strong>${escapeHtml(item.title)}</strong>
+        <small>${escapeHtml(item.category || firstSkill(item.skills) || "Portfolio detail")}</small>
+        ${item.tagline || item.description ? `<em>${escapeHtml(item.tagline || item.description)}</em>` : ""}
+      </span>
+      <span class="tree-node-meta">
+        ${isRecentlyAdded(item.dateAdded) ? `<span>New</span>` : ""}
+        ${linkCount ? `<span>${linkCount} link${linkCount === 1 ? "" : "s"}</span>` : ""}
+      </span>
+    </button>
+  `;
+}
+
+function treeNodeMark(profile, label) {
+  if (profile?.iconText?.trim()) return profile.iconText.trim().slice(0, 2).toUpperCase();
+  return label
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0])
+    .join("")
+    .toUpperCase();
 }
 
 function renderRow(title, items, count) {

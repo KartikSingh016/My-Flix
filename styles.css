@@ -654,8 +654,31 @@ button.brand {
 }
 
 .browse-shell {
+  --tree-accent: #37e2c2;
+  --tree-accent-soft: rgba(55, 226, 194, 0.18);
+  --tree-accent-line: rgba(55, 226, 194, 0.48);
+  --tree-node-bg: rgba(20, 26, 30, 0.76);
+  --tree-node-border: rgba(255, 255, 255, 0.12);
   min-height: 100vh;
   background: #111113;
+}
+
+.browse-theme-lavender {
+  --tree-accent: #d8ea58;
+  --tree-accent-soft: rgba(216, 234, 88, 0.18);
+  --tree-accent-line: rgba(216, 234, 88, 0.5);
+}
+
+.browse-theme-morning {
+  --tree-accent: #62c6ff;
+  --tree-accent-soft: rgba(98, 198, 255, 0.18);
+  --tree-accent-line: rgba(98, 198, 255, 0.52);
+}
+
+.browse-theme-night {
+  --tree-accent: #43ffd2;
+  --tree-accent-soft: rgba(67, 255, 210, 0.2);
+  --tree-accent-line: rgba(67, 255, 210, 0.56);
 }
 
 .top-nav {
@@ -977,6 +1000,333 @@ button.brand {
   z-index: 2;
   margin-top: clamp(-92px, -8vw, -42px);
   padding: 0 clamp(18px, 4vw, 56px) 80px;
+}
+
+.portfolio-tree-section {
+  position: relative;
+  margin: 0 0 clamp(34px, 5vw, 58px);
+  padding: clamp(18px, 3vw, 28px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.025)),
+    radial-gradient(circle at 12% 0%, var(--tree-accent-soft), transparent 24rem),
+    rgba(12, 12, 15, 0.84);
+  box-shadow:
+    0 18px 54px rgba(0, 0, 0, 0.32),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  overflow: hidden;
+}
+
+.portfolio-tree-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: linear-gradient(90deg, rgba(0, 0, 0, 0.62), transparent 78%);
+  pointer-events: none;
+}
+
+.tree-section-head {
+  position: relative;
+  z-index: 1;
+  margin: 0 0 18px;
+}
+
+.tree-section-head .eyebrow {
+  margin: 0 0 10px;
+  color: var(--tree-accent);
+}
+
+.tree-section-head .eyebrow::before {
+  background: var(--tree-accent);
+  box-shadow: 0 0 0 6px var(--tree-accent-soft);
+}
+
+.tree-section-head h2 {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(1.6rem, 3vw, 2.5rem);
+  line-height: 1;
+}
+
+.portfolio-tree-scroll {
+  position: relative;
+  z-index: 1;
+  max-height: min(760px, 72vh);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 6px 6px 14px 0;
+  scrollbar-color: var(--tree-accent-line) rgba(255, 255, 255, 0.08);
+  scrollbar-width: thin;
+}
+
+.portfolio-tree-scroll::-webkit-scrollbar {
+  width: 9px;
+}
+
+.portfolio-tree-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.07);
+  border-radius: 999px;
+}
+
+.portfolio-tree-scroll::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: var(--tree-accent-line);
+}
+
+.portfolio-tree {
+  display: grid;
+  gap: clamp(18px, 3vw, 28px);
+}
+
+.tree-branch {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(160px, 220px) minmax(0, 1fr);
+  gap: clamp(18px, 3vw, 34px);
+  align-items: start;
+}
+
+.tree-branch::before {
+  content: "";
+  position: absolute;
+  top: 50px;
+  bottom: -18px;
+  left: min(110px, 50%);
+  width: 2px;
+  background: linear-gradient(180deg, var(--tree-accent-line), rgba(255, 255, 255, 0.08));
+  box-shadow: 0 0 18px var(--tree-accent-soft);
+}
+
+.tree-branch:last-child::before {
+  bottom: 50%;
+}
+
+.tree-root-node,
+.tree-node {
+  border: 0;
+  text-align: left;
+  cursor: pointer;
+}
+
+.tree-root-node {
+  position: sticky;
+  top: 6px;
+  z-index: 2;
+  min-height: 112px;
+  display: grid;
+  grid-template-columns: 58px 1fr;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--tree-accent-line);
+  border-radius: 8px;
+  background:
+    linear-gradient(135deg, var(--tree-accent-soft), rgba(255, 255, 255, 0.05)),
+    rgba(18, 18, 22, 0.88);
+  color: #fff;
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.28),
+    0 0 24px var(--tree-accent-soft);
+}
+
+.tree-root-node::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  width: clamp(18px, 3vw, 34px);
+  height: 2px;
+  background: var(--tree-accent-line);
+  box-shadow: 0 0 16px var(--tree-accent-soft);
+}
+
+.tree-root-mark {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: var(--tree-accent);
+  color: #07110f;
+  font-weight: 900;
+  font-size: 1.1rem;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.35),
+    0 0 28px var(--tree-accent-soft);
+}
+
+.tree-root-node strong,
+.tree-node strong {
+  display: block;
+  color: #fff;
+  line-height: 1.08;
+}
+
+.tree-root-node strong {
+  font-size: clamp(1.15rem, 2vw, 1.55rem);
+}
+
+.tree-root-node small,
+.tree-node small,
+.tree-node em {
+  display: block;
+  color: rgba(255, 255, 255, 0.68);
+  font-style: normal;
+  line-height: 1.35;
+}
+
+.tree-root-node small {
+  margin-top: 5px;
+  font-weight: 700;
+}
+
+.tree-child-list {
+  position: relative;
+  display: grid;
+  gap: 12px;
+}
+
+.tree-child-list::before {
+  content: "";
+  position: absolute;
+  top: 18px;
+  bottom: 18px;
+  left: 13px;
+  width: 2px;
+  background: var(--tree-accent-line);
+  box-shadow: 0 0 14px var(--tree-accent-soft);
+}
+
+.tree-node {
+  --node-delay: calc(var(--node-index, 0) * 55ms);
+  position: relative;
+  min-height: 92px;
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px 14px 0;
+  border: 1px solid var(--tree-node-border);
+  border-radius: 8px;
+  background: var(--tree-node-bg);
+  color: #fff;
+  overflow: hidden;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.24);
+  opacity: 0;
+  transform: translateY(10px);
+  animation: treeNodeIn 420ms ease forwards;
+  animation-delay: var(--node-delay);
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.tree-node::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -26px;
+  width: 40px;
+  height: 2px;
+  background: var(--tree-accent-line);
+  box-shadow: 0 0 14px var(--tree-accent-soft);
+}
+
+.tree-node::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--tree-accent-soft), transparent 42%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+}
+
+.tree-node:hover,
+.tree-node:focus-visible {
+  transform: translateX(4px) scale(1.012);
+  border-color: var(--tree-accent-line);
+  background: rgba(28, 32, 36, 0.88);
+  box-shadow:
+    0 18px 42px rgba(0, 0, 0, 0.34),
+    0 0 24px var(--tree-accent-soft);
+}
+
+.tree-node:hover::after,
+.tree-node:focus-visible::after {
+  opacity: 1;
+}
+
+.tree-node-dot {
+  position: relative;
+  z-index: 1;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--tree-accent);
+  box-shadow:
+    0 0 0 6px rgba(255, 255, 255, 0.08),
+    0 0 22px var(--tree-accent-soft);
+}
+
+.tree-node-copy,
+.tree-node-meta {
+  position: relative;
+  z-index: 1;
+}
+
+.tree-node-copy {
+  min-width: 0;
+}
+
+.tree-node-copy strong {
+  margin-bottom: 4px;
+  font-size: clamp(1rem, 1.7vw, 1.22rem);
+  overflow-wrap: anywhere;
+}
+
+.tree-node-copy small,
+.tree-node-copy em {
+  overflow-wrap: anywhere;
+}
+
+.tree-node-copy em {
+  margin-top: 5px;
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 0.88rem;
+}
+
+.tree-node-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: end;
+  gap: 6px;
+}
+
+.tree-node-meta span {
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.72rem;
+  font-weight: 900;
+}
+
+.tree-empty-node {
+  position: relative;
+  padding: 18px;
+  border: 1px dashed rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--muted);
+  font-weight: 800;
 }
 
 .row {
@@ -1623,6 +1973,13 @@ button.brand {
   }
 }
 
+@keyframes treeNodeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (max-width: 860px) {
   :root {
     --header-h: 64px;
@@ -1695,6 +2052,46 @@ button.brand {
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   }
 
+  .portfolio-tree-scroll {
+    max-height: 680px;
+  }
+
+  .tree-branch {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .tree-branch::before {
+    left: 28px;
+    top: 98px;
+  }
+
+  .tree-root-node {
+    position: relative;
+    top: auto;
+    min-height: 92px;
+  }
+
+  .tree-root-node::after {
+    top: 100%;
+    left: 28px;
+    width: 2px;
+    height: 22px;
+  }
+
+  .tree-child-list {
+    padding-left: 20px;
+  }
+
+  .tree-node {
+    grid-template-columns: 28px minmax(0, 1fr);
+  }
+
+  .tree-node-meta {
+    grid-column: 2;
+    justify-content: start;
+  }
+
   .modal-body,
   .studio-grid {
     grid-template-columns: 1fr;
@@ -1763,6 +2160,35 @@ button.brand {
     padding-right: 12px;
   }
 
+  .portfolio-tree-section {
+    padding: 16px 12px;
+  }
+
+  .tree-section-head {
+    display: block;
+  }
+
+  .tree-section-head .eyebrow {
+    margin-bottom: 10px;
+  }
+
+  .portfolio-tree-scroll {
+    max-height: 620px;
+  }
+
+  .tree-root-node {
+    grid-template-columns: 48px 1fr;
+  }
+
+  .tree-root-mark {
+    width: 48px;
+    height: 48px;
+  }
+
+  .tree-node {
+    padding-right: 12px;
+  }
+
   .title-grid {
     grid-template-columns: 1fr;
   }
@@ -1799,8 +2225,14 @@ button.brand {
   .audience-backdrop,
   .cloud,
   .audience-screen .audience-avatar::before,
-  .audience-screen .audience-avatar::after {
+  .audience-screen .audience-avatar::after,
+  .tree-node {
     animation: none;
     transition: none;
+  }
+
+  .tree-node {
+    opacity: 1;
+    transform: none;
   }
 }
