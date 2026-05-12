@@ -420,13 +420,15 @@ persistNormalizedData();
 const requestedSection = new URLSearchParams(window.location.search).get("section");
 const sessionAccess = sessionStorage.getItem(SESSION_ACCESS_KEY);
 const sessionViewer = sessionStorage.getItem(SESSION_VIEWER_KEY);
-const initialViewer = sessionViewer || (sessionAccess === "admin" ? "Kartik" : "Guest");
+const initialViewer = sessionViewer || (sessionAccess === "admin" ? "Kartik" : null);
 const initialCollection =
   requestedSection && data.collections[requestedSection]
     ? requestedSection
-    : getViewerLandingCollection(initialViewer);
+    : initialViewer
+      ? getViewerLandingCollection(initialViewer)
+      : getDefaultCollectionKey();
 let state = {
-  view: "browse",
+  view: requestedSection && data.collections[requestedSection] ? "browse" : initialViewer ? "browse" : "audiences",
   collectionKey: initialCollection,
   accessMode: sessionAccess === "admin" ? "admin" : "viewer",
   currentViewer: initialViewer,
