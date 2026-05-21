@@ -436,6 +436,7 @@ let state = {
   passwordError: "",
   activeItemId: null,
   activeItemCollection: null,
+  treeExpandedKey: null,
   studioOpen: false,
   studioTab: "items",
   editingItemId: null,
@@ -914,14 +915,9 @@ function primaryActionButton(item) {
 function renderPortfolioTree() {
   const branches = getPortfolioTreeBranches();
   if (!branches.length) return "";
-  const treeTitle = `${branches[0].collection.navLabel} Tree`;
 
   return `
-    <section class="portfolio-tree-section" aria-labelledby="portfolioTreeTitle">
-      <div class="tree-section-head">
-        <p class="eyebrow">Portfolio Map</p>
-        <h2 id="portfolioTreeTitle">${escapeHtml(treeTitle)}</h2>
-      </div>
+    <section class="portfolio-tree-section" aria-label="${escapeAttr(branches[0].collection.navLabel)} growth tree">
       <div class="portfolio-tree-scroll">
         <div class="portfolio-tree">
           ${branches.map(renderTreeBranch).join("")}
@@ -943,20 +939,15 @@ function getPortfolioTreeBranches() {
 }
 
 function renderTreeBranch(branch) {
-  const items = getSortedItems(branch.collection);
+  const items = getSortedItems(branch.collection).reverse();
+  const nodeCount = Math.max(items.length, 1);
+  const treeHeight = Math.max(1050, 360 + nodeCount * 170);
   return `
-    <article class="tree-branch ${branch.key === state.collectionKey ? "active" : ""}">
-      <button class="tree-root-node" type="button" data-action="open-section" data-collection="${escapeAttr(branch.key)}">
-        <span class="tree-root-mark">${escapeHtml(treeNodeMark(branch.profile, branch.collection.navLabel))}</span>
-        <span>
-          <strong>${escapeHtml(branch.collection.navLabel)}</strong>
-          <small>${escapeHtml(branch.collection.eyebrow || "Showcase")}</small>
-        </span>
-      </button>
+    <article class="tree-branch ${branch.key === state.collectionKey ? "active" : ""}" style="--node-count: ${nodeCount}; --tree-height: ${treeHeight}px;">
       <div class="tree-child-list">
         ${
           items.length
-            ? items.map((item, index) => renderTreeNode(branch.key, item, index)).join("")
+            ? items.map((item, index) => renderTreeNode(branch.key, item, index, items.length)).join("")
             : `<div class="tree-empty-node">${escapeHtml(branch.collection.emptyTitle)}</div>`
         }
       </div>
@@ -964,28 +955,48 @@ function renderTreeBranch(branch) {
   `;
 }
 
-function renderTreeNode(collectionKey, item, index) {
-  const linkCount = [item.githubUrl, item.liveUrl, item.documentUrl].filter(Boolean).length;
+function renderTreeNode(collectionKey, item, index, totalItems) {
+  const side = index % 2 === 0 ? "side-right" : "side-left";
+  const nodeSpan = Math.min(68, Math.max(28, 22 + totalItems * 9));
+  const nodeY = totalItems <= 1 ? 54 : 50 + nodeSpan / 2 - (index / (totalItems - 1)) * nodeSpan;
+  const treeKey = `${collectionKey}:${item.id}`;
+  const isExpanded = state.treeExpandedKey === treeKey;
+  const summary = item.tagline || item.description || item.category || firstSkill(item.skills) || "";
+  const tools = item.skills || item.category || "";
+  const hasLinks = item.githubUrl || item.liveUrl || item.documentUrl;
   return `
-    <button
-      class="tree-node"
-      type="button"
-      data-action="open-item"
-      data-collection="${escapeAttr(collectionKey)}"
-      data-item-id="${escapeAttr(item.id)}"
-      style="--node-index: ${index};"
+    <article
+      class="tree-node ${side} ${isExpanded ? "expanded" : ""}"
+      style="--node-index: ${index}; --node-y: ${nodeY.toFixed(3)}%; --node-delay: ${index * 55}ms;"
     >
       <span class="tree-node-dot"></span>
-      <span class="tree-node-copy">
+      <button
+        class="tree-node-toggle"
+        type="button"
+        data-action="toggle-tree-node"
+        data-tree-key="${escapeAttr(treeKey)}"
+        aria-expanded="${isExpanded ? "true" : "false"}"
+      >
         <strong>${escapeHtml(item.title)}</strong>
-        <small>${escapeHtml(item.category || firstSkill(item.skills) || "Portfolio detail")}</small>
-        ${item.tagline || item.description ? `<em>${escapeHtml(item.tagline || item.description)}</em>` : ""}
-      </span>
-      <span class="tree-node-meta">
-        ${isRecentlyAdded(item.dateAdded) ? `<span>New</span>` : ""}
-        ${linkCount ? `<span>${linkCount} link${linkCount === 1 ? "" : "s"}</span>` : ""}
-      </span>
-    </button>
+      </button>
+      ${
+        isExpanded
+          ? `<div class="tree-node-details">
+              ${summary ? `<p>${escapeHtml(summary)}</p>` : ""}
+              ${tools ? `<small>${escapeHtml(tools)}</small>` : ""}
+              ${
+                hasLinks
+                  ? `<div class="tree-node-links">
+                      ${item.githubUrl ? `<a href="${escapeAttr(item.githubUrl)}" ${linkTargetAttrs(item.githubUrl)}>GitHub</a>` : ""}
+                      ${item.liveUrl ? `<a href="${escapeAttr(item.liveUrl)}" ${linkTargetAttrs(item.liveUrl)}>Live</a>` : ""}
+                      ${item.documentUrl ? `<a href="${escapeAttr(item.documentUrl)}" ${linkTargetAttrs(item.documentUrl)}>Document</a>` : ""}
+                    </div>`
+                  : ""
+              }
+            </div>`
+          : ""
+      }
+    </article>
   `;
 }
 
@@ -1404,6 +1415,12 @@ function handleClick(event) {
     transitionTo(() => openCollection(target.dataset.collection));
   }
 
+  if (action === "toggle-tree-node") {
+    const nextKey = target.dataset.treeKey;
+    state.treeExpandedKey = state.treeExpandedKey === nextKey ? null : nextKey;
+    render();
+  }
+
   if (action === "open-item") {
     state.activeItemCollection = target.dataset.collection || state.collectionKey;
     state.activeItemId = target.dataset.itemId;
@@ -1738,11 +1755,18 @@ function openCollection(collectionKey) {
   if (!data.collections[collectionKey]) return;
   state.view = "browse";
   state.collectionKey = collectionKey;
+  state.treeExpandedKey = null;
   closeOverlays();
   render();
 }
 
 function appBack() {
+  if (state.treeExpandedKey) {
+    state.treeExpandedKey = null;
+    render();
+    return;
+  }
+
   if (state.activeItemId) {
     state.activeItemId = null;
     state.activeItemCollection = null;
@@ -1774,6 +1798,7 @@ function appBack() {
 function closeOverlays() {
   state.activeItemId = null;
   state.activeItemCollection = null;
+  state.treeExpandedKey = null;
   state.studioOpen = false;
   state.passwordPrompt = false;
 }
